@@ -1,2 +1,2 @@
 env/
-cfg/config_secrets.yml
+vars.env
