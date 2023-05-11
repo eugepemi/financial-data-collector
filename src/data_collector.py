@@ -1,9 +1,9 @@
 import websocket
 import json
-from storage_ingestion import AzureBlobIngestor
+from storage_ingestion import AzureBlobStorage
 
 # Instantiating the Azure Blob ingestor
-ingestor = AzureBlobIngestor()
+ingestor = AzureBlobStorage()
 
 def on_open(ws):
     """
@@ -32,7 +32,7 @@ def on_message(ws, message):
     data = json.loads(message)
     print(data)
     # Ingest the data into Azure Blob Storage
-    ingestor.store_data(data)
+    ingestor.insert_data(data, 'bronze')
 
 # WebSocket URL for Coinbase Pro
 socket = "wss://ws-feed.pro.coinbase.com"
