@@ -30,22 +30,28 @@ async def subscribe_ticker(ticker):
         # Send the subscription message
         await ws.send(json.dumps(subscribe_message))
 
+        batch_data = []
+        batch_size = 10000
+
         # Process received messages
         async for message in ws:
-            print(f"Message received for {ticker}")
             data = json.loads(message)
-            print(data)
             # If the message includes a 'product_id' field, store it in Azure Blob Storage
             if 'product_id' in data:
-                ingestor.insert_data(data, "bronze")
+                batch_data.append(data)
+
+                if len(batch_data) >= batch_size:
+                    ingestor.insert_data(batch_data, "bronze")
+                    # Empty the batch_data list for the next batch
+                    batch_data = []  
 
 # Define the list of tickers to subscribe to
-tickers = ["BTC-USD", "ETH-USD"]  # TODO: avoid hardcoding
+tickers = ["BTC-USD", "ETH-USD", "USDT-USD", "BNB-USD", "XRP-USD", "DOGE-USD"]  # TODO: avoid hardcoding
 
-async def main():
+async def gather_tasks():
     """
     This function creates a list of tasks, each of which is a coroutine for subscribing to a specific ticker.
-    It then runs all these tasks concurrently.
+    with the objective to run all these tasks concurrently.
     """
     # Create a list of tasks
     tasks = []
@@ -58,4 +64,4 @@ async def main():
     await asyncio.gather(*tasks)
 
 # Run the main function
-asyncio.run(main())
+asyncio.run(gather_tasks())
