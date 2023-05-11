@@ -2,6 +2,7 @@ import os
 import json
 from dotenv import load_dotenv
 from azure.storage.blob import BlobServiceClient
+import uuid
 
 
 class AzureBlobStorage:
@@ -32,7 +33,7 @@ class AzureBlobStorage:
             data (dict): The data to insert
             container_name (str): The name of the container
         """
-        blob_name = f"{data['product_id']}_{data['time']}.json"
+        blob_name = f"{data['product_id']}_{data['time']}_{uuid.uuid4()}.json"
         container_client = self.blob_service_client.get_container_client(container_name)
         blob_client = container_client.get_blob_client(blob_name)
 
