@@ -12,7 +12,6 @@ class AzureBlobStorage:
     def __init__(self):
         load_dotenv()
         self.connection_string = os.getenv("AZURE_STORAGE_CONNECTION_STRING")
-        print(self.connection_string)
         self.blob_service_client = BlobServiceClient.from_connection_string(self.connection_string)
 
     def create_container(self, container_name):
@@ -26,18 +25,20 @@ class AzureBlobStorage:
         """
         return self.blob_service_client.create_container(container_name)
 
-    def insert_data(self, data, container_client):
+    def insert_data(self, data, container_name):
         """Inserts data into Azure Blob Storage.
 
         Args:
             data (dict): The data to insert
-            container_client (ContainerClient): The ContainerClient object
+            container_name (str): The name of the container
         """
         blob_name = f"{data['product_id']}_{data['time']}.json"
+        container_client = self.blob_service_client.get_container_client(container_name)
         blob_client = container_client.get_blob_client(blob_name)
 
         data_str = json.dumps(data)
         data_bytes = data_str.encode("utf-8")
-
+        
         blob_client.upload_blob(data_bytes)
+        print('Loaded on storage')
     
