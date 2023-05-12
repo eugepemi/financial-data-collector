@@ -31,7 +31,7 @@ async def subscribe_ticker(ticker):
         await ws.send(json.dumps(subscribe_message))
 
         batch_data = []
-        batch_size = 10000
+        batch_size = 50
 
         # Process received messages
         async for message in ws:
@@ -43,7 +43,8 @@ async def subscribe_ticker(ticker):
                 if len(batch_data) >= batch_size:
                     ingestor.insert_data(batch_data, "bronze")
                     # Empty the batch_data list for the next batch
-                    batch_data = []  
+                    batch_data = []
+
 
 # Define the list of tickers to subscribe to
 tickers = ["BTC-USD", "ETH-USD", "USDT-USD", "BNB-USD", "XRP-USD", "DOGE-USD"]  # TODO: avoid hardcoding
