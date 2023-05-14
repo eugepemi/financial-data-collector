@@ -31,7 +31,7 @@ async def subscribe_ticker(ticker):
         await ws.send(json.dumps(subscribe_message))
 
         batch_data = []
-        batch_size = 50
+        batch_size = 5000
 
         # Process received messages
         async for message in ws:
