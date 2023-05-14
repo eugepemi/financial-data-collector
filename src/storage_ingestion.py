@@ -43,5 +43,4 @@ class AzureBlobStorage:
         data_bytes = data_str.encode("utf-8")
         
         blob_client.upload_blob(data_bytes)
-        print('Loaded on storage')
     
